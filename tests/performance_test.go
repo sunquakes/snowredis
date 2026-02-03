@@ -7,7 +7,7 @@ import (
 
 	"github.com/sunquakes/snowredis/tests/mock"
 
-	"github.com/sunquakes/snowredis/internal/snowflake"
+	"github.com/sunquakes/snowredis/snowflake"
 )
 
 // BenchmarkIDGeneration Performance benchmark test

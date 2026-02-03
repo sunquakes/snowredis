@@ -32,8 +32,8 @@ import (
 	"fmt"
 	"log"
 
-	"snowredis/internal/redis"
-	"snowredis/internal/snowflake"
+	"github.com/sunquakes/snowredis/redis"
+	"github.com/sunquakes/snowredis/snowflake"
 )
 
 func main() {
