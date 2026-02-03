@@ -1,4 +1,4 @@
-module snowredis
+module github.com/sunquakes/snowredis
 
 go 1.25.3
 

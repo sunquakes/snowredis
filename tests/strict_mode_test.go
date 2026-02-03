@@ -3,20 +3,21 @@ package tests
 import (
 	"testing"
 
-	"snowredis/internal/snowflake"
-	"snowredis/tests/mock"
+	"github.com/sunquakes/snowredis/tests/mock"
+
+	"github.com/sunquakes/snowredis/internal/snowflake"
 )
 
-// TestStrictModeWithRedis 测试严格模式下使用Redis辅助防止重复
+// TestStrictModeWithRedis tests using Redis assistance in strict mode to prevent duplicates
 func TestStrictModeWithRedis(t *testing.T) {
 	mockRedis := mock.NewMockRedisClient()
 
-	// 创建启用严格模式的雪花算法实例
+	// Create a snowflake instance with strict mode enabled
 	sf, err := snowflake.NewBuilder().
 		SetRedisClient(mockRedis).
 		SetDatacenterID(1).
 		SetWorkerID(1).
-		SetStrictMode(true). // 启用严格模式
+		SetStrictMode(true). // Enable strict mode
 		Build()
 	if err != nil {
 		t.Fatalf("Failed to initialize Redis Snowflake in strict mode: %v", err)
@@ -33,13 +34,13 @@ func TestStrictModeWithRedis(t *testing.T) {
 		}
 		ids[i] = id
 
-		// 验证ID是正数
+		// Verify the ID is positive
 		if id <= 0 {
 			t.Errorf("Generated ID should be positive, got: %d", id)
 		}
 	}
 
-	// 检查ID唯一性
+	// Check ID uniqueness
 	seen := make(map[int64]bool)
 	for _, id := range ids {
 		if seen[id] {
@@ -49,20 +50,20 @@ func TestStrictModeWithRedis(t *testing.T) {
 	}
 }
 
-// TestStrictModeWithoutRedis 测试在没有Redis客户端的情况下启用严格模式
+// TestStrictModeWithoutRedis tests enabling strict mode without a Redis client
 func TestStrictModeWithoutRedis(t *testing.T) {
-	// 创建启用严格模式但没有Redis客户端的雪花算法实例
+	// Create a snowflake instance with strict mode enabled but without a Redis client
 	sf, err := snowflake.NewBuilder().
 		SetDatacenterID(1).
 		SetWorkerID(1).
-		SetStrictMode(true). // 启用严格模式，但没有Redis客户端
+		SetStrictMode(true). // Enable strict mode but without a Redis client
 		Build()
 	if err != nil {
 		t.Fatalf("Failed to initialize Redis Snowflake in strict mode without Redis: %v", err)
 	}
 	defer sf.Cleanup()
 
-	// 应该退回到本地生成模式
+	// Should fall back to local generation mode
 	id, err := sf.Generate()
 	if err != nil {
 		t.Errorf("Error generating ID in strict mode fallback: %v", err)
@@ -73,16 +74,16 @@ func TestStrictModeWithoutRedis(t *testing.T) {
 	}
 }
 
-// TestNormalMode 测试正常模式（非严格模式）
+// TestNormalMode tests normal mode (non-strict mode)
 func TestNormalMode(t *testing.T) {
 	mockRedis := mock.NewMockRedisClient()
 
-	// 创建未启用严格模式的雪花算法实例
+	// Create a snowflake instance without strict mode enabled
 	sf, err := snowflake.NewBuilder().
 		SetRedisClient(mockRedis).
 		SetDatacenterID(1).
 		SetWorkerID(1).
-		SetStrictMode(false). // 不启用严格模式（默认行为）
+		SetStrictMode(false). // Disable strict mode (default behavior)
 		Build()
 	if err != nil {
 		t.Fatalf("Failed to initialize Redis Snowflake in normal mode: %v", err)
@@ -99,13 +100,13 @@ func TestNormalMode(t *testing.T) {
 		}
 		ids[i] = id
 
-		// 验证ID是正数
+		// Verify the ID is positive
 		if id <= 0 {
 			t.Errorf("Generated ID should be positive, got: %d", id)
 		}
 	}
 
-	// 检查ID唯一性
+	// Check ID uniqueness
 	seen := make(map[int64]bool)
 	for _, id := range ids {
 		if seen[id] {

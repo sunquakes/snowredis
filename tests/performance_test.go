@@ -5,8 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"snowredis/internal/snowflake"
-	"snowredis/tests/mock"
+	"github.com/sunquakes/snowredis/tests/mock"
+
+	"github.com/sunquakes/snowredis/internal/snowflake"
 )
 
 // BenchmarkIDGeneration Performance benchmark test

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"snowredis/internal/redis"
+	"github.com/sunquakes/snowredis/internal/redis"
 )
 
 const (

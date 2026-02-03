@@ -3,8 +3,9 @@ package tests
 import (
 	"testing"
 
-	"snowredis/internal/snowflake"
-	"snowredis/tests/mock"
+	"github.com/sunquakes/snowredis/tests/mock"
+
+	"github.com/sunquakes/snowredis/internal/snowflake"
 )
 
 func TestRedisSnowflakeGeneration(t *testing.T) {
