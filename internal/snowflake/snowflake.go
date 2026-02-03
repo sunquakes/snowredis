@@ -34,51 +34,60 @@ type RedisSnowflakeBuilder struct {
 	strictMode   bool // Whether to use strict mode with Redis assistance
 }
 
-// =========================== BUILDER METHODS ===========================
-// NewBuilder creates a new RedisSnowflakeBuilder instance
-// Input: none
-// Output: *RedisSnowflakeBuilder - a new builder instance
+/**
+ * NewBuilder creates a new RedisSnowflakeBuilder instance
+ * @return *RedisSnowflakeBuilder - a new builder instance
+ */
 func NewBuilder() *RedisSnowflakeBuilder {
 	return &RedisSnowflakeBuilder{}
 }
 
-// SetRedisClient sets the Redis client for the builder
-// Input: client - redis.RedisClient interface implementation
-// Output: *RedisSnowflakeBuilder - the builder instance for chaining
+/**
+ * SetRedisClient sets the Redis client for the builder
+ * @param client - redis.RedisClient interface implementation
+ * @return *RedisSnowflakeBuilder - the builder instance for chaining
+ */
 func (builder *RedisSnowflakeBuilder) SetRedisClient(client redis.RedisClient) *RedisSnowflakeBuilder {
 	builder.client = client
 	return builder
 }
 
-// SetDatacenterID sets the datacenter ID for the snowflake instance
-// Input: id - int64 representing the datacenter ID (should be 0-31 to fit in 5 bits)
-// Output: *RedisSnowflakeBuilder - the builder instance for chaining
+/**
+ * SetDatacenterID sets the datacenter ID for the snowflake instance
+ * @param id - int64 representing the datacenter ID (should be 0-31 to fit in 5 bits)
+ * @return *RedisSnowflakeBuilder - the builder instance for chaining
+ */
 func (builder *RedisSnowflakeBuilder) SetDatacenterID(id int64) *RedisSnowflakeBuilder {
 	builder.datacenterID = id
 	return builder
 }
 
-// SetWorkerID sets the worker ID for the snowflake instance
-// Input: id - int64 representing the worker ID (should be 0-31 to fit in 5 bits)
-// Output: *RedisSnowflakeBuilder - the builder instance for chaining
+/**
+ * SetWorkerID sets the worker ID for the snowflake instance
+ * @param id - int64 representing the worker ID (should be 0-31 to fit in 5 bits)
+ * @return *RedisSnowflakeBuilder - the builder instance for chaining
+ */
 func (builder *RedisSnowflakeBuilder) SetWorkerID(id int64) *RedisSnowflakeBuilder {
 	builder.workerID = id
 	return builder
 }
 
-// SetStrictMode sets whether to use strict mode with Redis assistance to prevent duplicates
-// Input: strict - bool indicating whether to enable strict mode
-// Output: *RedisSnowflakeBuilder - the builder instance for chaining
+/**
+ * SetStrictMode sets whether to use strict mode with Redis assistance to prevent duplicates
+ * @param strict - bool indicating whether to enable strict mode
+ * @return *RedisSnowflakeBuilder - the builder instance for chaining
+ */
 func (builder *RedisSnowflakeBuilder) SetStrictMode(strict bool) *RedisSnowflakeBuilder {
 	builder.strictMode = strict
 	return builder
 }
 
-// Build creates and returns a RedisSnowflake instance based on the configured parameters
-// Input: none (uses the builder's internal state)
-// Output: *RedisSnowflake - the configured snowflake instance
-//
-//	error - any error that occurred during construction
+/*
+/**
+  - Build creates and returns a RedisSnowflake instance based on the configured parameters
+  - @return *RedisSnowflake - the configured snowflake instance
+  - @return error - any error that occurred during construction
+*/
 func (builder *RedisSnowflakeBuilder) Build() (*RedisSnowflake, error) {
 	// Determine how to build the instance based on priority
 	datacenterID, workerID, useRedisAllocation := builder.determineConfiguration()
@@ -94,12 +103,12 @@ func (builder *RedisSnowflakeBuilder) Build() (*RedisSnowflake, error) {
 	}
 }
 
-// determineConfiguration determines the configuration based on priority of provided parameters
-// Input: none (uses the builder's internal state)
-// Output: int64 - the datacenter ID to use
-//
-//	int64 - the worker ID to use
-//	bool - flag indicating whether to use Redis allocation
+/**
+ * determineConfiguration determines the configuration based on priority of provided parameters
+ * @return int64 - the datacenter ID to use
+ * @return int64 - the worker ID to use
+ * @return bool - flag indicating whether to use Redis allocation
+ */
 func (builder *RedisSnowflakeBuilder) determineConfiguration() (int64, int64, bool) {
 	// 1. If datacenterID and workerID (non-zero) are set, prioritize manual values
 	if builder.datacenterID != ZeroValue && builder.workerID != ZeroValue {
@@ -113,12 +122,11 @@ func (builder *RedisSnowflakeBuilder) determineConfiguration() (int64, int64, bo
 	}
 }
 
-// =========================== INSTANCE METHODS ===========================
-// generateLocally generates an ID locally without Redis coordination
-// Input: none (uses the RedisSnowflake instance's internal state)
-// Output: int64 - the generated unique ID
-//
-//	error - any error that occurred during generation (e.g. clock rollback)
+/**
+ * generateLocally generates an ID locally without Redis coordination
+ * @return int64 - the generated unique ID
+ * @return error - any error that occurred during generation (e.g. clock rollback)
+ */
 func (rs *RedisSnowflake) generateLocally() (int64, error) {
 	rs.node.Lock()
 	defer rs.node.Unlock()
@@ -155,11 +163,11 @@ func (rs *RedisSnowflake) generateLocally() (int64, error) {
 	return id, nil
 }
 
-// generateWithRedisAssistance generates an ID using Redis assistance to ensure global uniqueness
-// Input: none (uses the RedisSnowflake instance's internal state)
-// Output: int64 - the generated unique ID
-//
-//	error - any error that occurred during generation
+/**
+ * generateWithRedisAssistance generates an ID using Redis assistance to ensure global uniqueness
+ * @return int64 - the generated unique ID
+ * @return error - any error that occurred during generation
+ */
 func (rs *RedisSnowflake) generateWithRedisAssistance() (int64, error) {
 	// Try multiple times to generate an ID until we successfully obtain a unique one
 	maxRetries := 10
@@ -194,11 +202,11 @@ func (rs *RedisSnowflake) generateWithRedisAssistance() (int64, error) {
 	return 0, fmt.Errorf("failed to generate unique ID after %d attempts", maxRetries)
 }
 
-// Generate generates a unique ID based on the configuration (local or with Redis assistance)
-// Input: none (uses the RedisSnowflake instance's internal state)
-// Output: int64 - the generated unique ID
-//
-//	error - any error that occurred during generation
+/**
+ * Generate generates a unique ID based on the configuration (local or with Redis assistance)
+ * @return int64 - the generated unique ID
+ * @return error - any error that occurred during generation
+ */
 func (rs *RedisSnowflake) Generate() (int64, error) {
 	// If strict mode is enabled and Redis client exists, use Redis assistance
 	if rs.strictMode && rs.redisClient != nil {
@@ -209,23 +217,22 @@ func (rs *RedisSnowflake) Generate() (int64, error) {
 	return rs.generateLocally()
 }
 
-// Cleanup performs cleanup operations for the RedisSnowflake instance
-// Input: none (uses the RedisSnowflake instance's internal state)
-// Output: none
+/**
+ * Cleanup performs cleanup operations for the RedisSnowflake instance
+ */
 func (rs *RedisSnowflake) Cleanup() {
 	// Currently no Redis data needs to be cleaned up
 	// Previous node registration functionality has been removed
 }
 
-// createInstance creates a RedisSnowflake instance with the given parameters
-// Input: datacenterID - int64 representing the datacenter ID
-//
-//	workerID - int64 representing the worker ID
-//	client - redis.RedisClient interface implementation (can be nil for local-only mode)
-//
-// Output: *RedisSnowflake - the created instance
-//
-//	error - any error that occurred during creation
+/**
+ * createInstance creates a RedisSnowflake instance with the given parameters
+ * @param datacenterID - int64 representing the datacenter ID
+ * @param workerID - int64 representing the worker ID
+ * @param client - redis.RedisClient interface implementation (can be nil for local-only mode)
+ * @return *RedisSnowflake - the created instance
+ * @return error - any error that occurred during creation
+ */
 func (builder *RedisSnowflakeBuilder) createInstance(datacenterID, workerID int64, client redis.RedisClient) (*RedisSnowflake, error) {
 	node, err := NewNode(datacenterID, workerID)
 	if err != nil {
@@ -241,37 +248,36 @@ func (builder *RedisSnowflakeBuilder) createInstance(datacenterID, workerID int6
 	}, nil
 }
 
-// createLocalInstance creates a local-only instance for ID generation (without Redis coordination)
-// Input: datacenterID - int64 representing the datacenter ID
-//
-//	workerID - int64 representing the worker ID
-//	client - redis.RedisClient interface implementation (will be nil for local-only mode)
-//
-// Output: *RedisSnowflake - the created local instance
-//
-//	error - any error that occurred during creation
+/**
+ * createLocalInstance creates a local-only instance for ID generation (without Redis coordination)
+ * @param datacenterID - int64 representing the datacenter ID
+ * @param workerID - int64 representing the worker ID
+ * @param client - redis.RedisClient interface implementation (will be nil for local-only mode)
+ * @return *RedisSnowflake - the created local instance
+ * @return error - any error that occurred during creation
+ */
 func (builder *RedisSnowflakeBuilder) createLocalInstance(datacenterID, workerID int64, client redis.RedisClient) (*RedisSnowflake, error) {
 	return builder.createInstance(datacenterID, workerID, client)
 }
 
-// createInstanceWithClient creates an instance with a Redis client and specified IDs
-// Input: client - redis.RedisClient interface implementation
-//
-//	datacenterID - int64 representing the datacenter ID
-//	workerID - int64 representing the worker ID
-//
-// Output: *RedisSnowflake - the created instance with Redis client
-//
-//	error - any error that occurred during creation
+/**
+ * createInstanceWithClient creates an instance with a Redis client and specified IDs
+ * @param client - redis.RedisClient interface implementation
+ * @param datacenterID - int64 representing the datacenter ID
+ * @param workerID - int64 representing the worker ID
+ * @return *RedisSnowflake - the created instance with Redis client
+ * @return error - any error that occurred during creation
+ */
 func (builder *RedisSnowflakeBuilder) createInstanceWithClient(client redis.RedisClient, datacenterID, workerID int64) (*RedisSnowflake, error) {
 	return builder.createInstance(datacenterID, workerID, client)
 }
 
-// createRedisAllocatedInstance creates an instance with IDs automatically allocated by Redis
-// Input: client - redis.RedisClient interface implementation
-// Output: *RedisSnowflake - the created instance with Redis-allocated IDs
-//
-//	error - any error that occurred during creation or ID allocation
+/**
+ * createRedisAllocatedInstance creates an instance with IDs automatically allocated by Redis
+ * @param client - redis.RedisClient interface implementation
+ * @return *RedisSnowflake - the created instance with Redis-allocated IDs
+ * @return error - any error that occurred during creation or ID allocation
+ */
 func (builder *RedisSnowflakeBuilder) createRedisAllocatedInstance(client redis.RedisClient) (*RedisSnowflake, error) {
 	ctx := context.Background()
 

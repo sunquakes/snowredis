@@ -1,8 +1,8 @@
-# Snowflake-Redis Design Document
+# SnowRedis Design Document
 
 ## Overview
 
-Snowflake-Redis is a distributed ID generation system that combines the Twitter Snowflake algorithm with Redis coordination to ensure unique ID generation across distributed systems. The system generates 64-bit unique IDs composed of timestamp, datacenter ID, worker ID, and sequence number.
+SnowRedis is a distributed ID generation system that combines the Twitter Snowflake algorithm with Redis coordination to ensure unique ID generation across distributed systems. The system generates 64-bit unique IDs composed of timestamp, datacenter ID, worker ID, and sequence number.
 
 ## Architecture
 

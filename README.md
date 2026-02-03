@@ -1,4 +1,4 @@
-# Snowflake-Redis
+# SnowRedis
 
 A distributed ID generator utility using the Snowflake algorithm with Redis for coordination.
 

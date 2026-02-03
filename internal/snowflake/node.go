@@ -48,7 +48,13 @@ type Node struct {
 	lastTimestamp int64 // Timestamp of last generated ID
 }
 
-// NewNode Creates a new snowflake algorithm node
+/**
+ * NewNode Creates a new snowflake algorithm node
+ * @param datacenterID - int64 representing the datacenter ID (0-31)
+ * @param workerID - int64 representing the worker ID (0-31)
+ * @return *Node - the created Node instance
+ * @return error - any error that occurred during creation
+ */
 func NewNode(datacenterID int64, workerID int64) (*Node, error) {
 	if datacenterID < 0 || datacenterID > maxDatacenterID {
 		return nil, ErrInvalidDatacenter
@@ -66,7 +72,10 @@ func NewNode(datacenterID int64, workerID int64) (*Node, error) {
 	}, nil
 }
 
-// currentTimeMillis Gets current timestamp in milliseconds
+/**
+ * currentTimeMillis Gets current timestamp in milliseconds
+ * @return int64 - current timestamp in milliseconds
+ */
 func currentTimeMillis() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
