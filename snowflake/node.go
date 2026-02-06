@@ -10,8 +10,6 @@ const (
 	// Epoch Timestamp offset (2022-01-01 00:00:00 UTC)
 	Epoch int64 = 1640995200000
 
-	// Number of timestamp bits
-	timestampBits = 41
 	// Number of datacenter ID bits
 	datacenterBits = 5
 	// Number of worker ID bits
