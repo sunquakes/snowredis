@@ -8,14 +8,14 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-// Config Defines Redis connection configuration
+// Config Defines Redis connection configuration.
 type Config struct {
 	Addr string
 	Pwd  string
 	Db   int
 }
 
-// RedisWrapper Wraps *redis.Client to implement RedisClient interface
+// RedisWrapper Wraps *redis.Client to implement RedisClient interface.
 type RedisWrapper struct {
 	client *redis.Client
 }
@@ -71,12 +71,13 @@ func NewClient(cfg *Config) (*RedisWrapper, error) {
 	// Test connection
 	_, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to Redis: %v", err)
+		return nil, fmt.Errorf("failed to connect to Redis: %w", err)
 	}
 
 	redisWrapper := &RedisWrapper{client: client}
 
-	fmt.Println("Connected to Redis successfully")
+	// Log successful connection (optional - can be removed if logging is not desired)
+	// fmt.Printf("Connected to Redis successfully\n")
 	return redisWrapper, nil
 }
 
@@ -96,11 +97,12 @@ func NewRedisClient(cfg *Config) (RedisClient, error) {
 	// Test connection
 	_, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to Redis: %v", err)
+		return nil, fmt.Errorf("failed to connect to Redis: %w", err)
 	}
 
 	redisWrapper := &RedisWrapper{client: client}
 
-	fmt.Println("Connected to Redis successfully")
+	// Log successful connection (optional - can be removed if logging is not desired)
+	// fmt.Printf("Connected to Redis successfully\n")
 	return redisWrapper, nil
 }

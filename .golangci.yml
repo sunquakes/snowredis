@@ -45,9 +45,6 @@ linters:
     - wrapcheck
     - interfacer
     - scopelint
-    - depguard
-    - inamedparam
-    - nonamedreturns
     - musttag
     - ireturn
     - forcetypeassert
@@ -58,7 +55,7 @@ linters:
     - containedctx
     - contextcheck
     - revive
-    - nosnakecase
+    - nosprintfhostport
     - rowserrcheck
     - sqlclosecheck
     - wastedassign

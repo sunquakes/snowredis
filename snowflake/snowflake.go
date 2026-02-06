@@ -10,11 +10,13 @@ import (
 )
 
 const (
-	DefaultDatacenterID = 1
-	DefaultWorkerID     = 1
-	AutoAllocateFlag    = true
-	NoAllocationFlag    = false
-	ZeroValue           = 0
+	DefaultDatacenterID    = 1
+	DefaultWorkerID        = 1
+	AutoAllocateFlag       = true
+	NoAllocationFlag       = false
+	ZeroValue              = 0
+	MaxDatacenterIDPlusOne = 32 // Used to limit datacenter ID to 5 bits
+	MaxWorkerIDPlusOne     = 32 // Used to limit worker ID to 5 bits
 )
 
 // RedisSnowflake Redis-based snowflake algorithm implementation
@@ -287,14 +289,14 @@ func (builder *RedisSnowflakeBuilder) createRedisAllocatedInstance(client redis.
 	if err != nil {
 		return nil, fmt.Errorf("failed to get datacenter ID from Redis: %v", err)
 	}
-	datacenterID = datacenterID % 32 // Limit to 5 bits
+	datacenterID = datacenterID % MaxDatacenterIDPlusOne // Limit to 5 bits
 
 	workerKey := "snowflake:next_worker_id"
 	workerID, err := client.Incr(ctx, workerKey)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get worker ID from Redis: %v", err)
+		return nil, fmt.Errorf("failed to get worker ID from Redis: %w", err)
 	}
-	workerID = workerID % 32 // Limit to 5 bits
+	workerID = workerID % MaxWorkerIDPlusOne // Limit to 5 bits
 
 	return builder.createInstance(datacenterID, workerID, client)
 }

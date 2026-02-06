@@ -6,7 +6,7 @@ import (
 )
 
 /**
- * RedisClient Interface defining basic Redis operations required for ID allocation
+ * RedisClient Interface defining basic Redis operations required for ID allocation.
  */
 type RedisClient interface {
 	/**
