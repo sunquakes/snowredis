@@ -195,10 +195,10 @@ if err != nil {
 
 ## 自定义Redis客户端实现
 
-该库对Redis客户端采用基于接口的方法，允许您实现符合RedisClient接口的自己的Redis客户端：
+该库对Redis客户端采用基于接口的方法，允许您实现符合Client接口的自己的Redis客户端：
 
 ```go
-type RedisClient interface {
+type Client interface {
 	SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) (bool, error)
 	Incr(ctx context.Context, key string) (int64, error)
 	Del(ctx context.Context, keys ...string) (int64, error)

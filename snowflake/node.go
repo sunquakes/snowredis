@@ -1,3 +1,4 @@
+// Package snowflake provides a distributed ID generator using the Snowflake algorithm.
 package snowflake
 
 import (
@@ -31,10 +32,14 @@ const (
 )
 
 var (
-	ErrInvalidNodeID     = errors.New("invalid node ID")
+	// ErrInvalidNodeID represents an invalid node ID error
+	ErrInvalidNodeID = errors.New("invalid node ID")
+	// ErrInvalidDatacenter represents an invalid datacenter ID error
 	ErrInvalidDatacenter = errors.New("invalid datacenter ID")
-	ErrInvalidWorker     = errors.New("invalid worker ID")
-	ErrOverFlow          = errors.New("sequence number exceeds maximum value")
+	// ErrInvalidWorker represents an invalid worker ID error
+	ErrInvalidWorker = errors.New("invalid worker ID")
+	// ErrOverFlow represents a sequence overflow error
+	ErrOverFlow = errors.New("sequence number exceeds maximum value")
 )
 
 // Node Snowflake algorithm node structure
@@ -46,13 +51,11 @@ type Node struct {
 	lastTimestamp int64 // Timestamp of last generated ID
 }
 
-/**
- * NewNode Creates a new snowflake algorithm node
- * @param datacenterID - int64 representing the datacenter ID (0-31)
- * @param workerID - int64 representing the worker ID (0-31)
- * @return *Node - the created Node instance
- * @return error - any error that occurred during creation
- */
+// NewNode Creates a new snowflake algorithm node
+// @param datacenterID - int64 representing the datacenter ID (0-31)
+// @param workerID - int64 representing the worker ID (0-31)
+// @return *Node - the created Node instance
+// @return error - any error that occurred during creation
 func NewNode(datacenterID int64, workerID int64) (*Node, error) {
 	if datacenterID < 0 || datacenterID > maxDatacenterID {
 		return nil, ErrInvalidDatacenter

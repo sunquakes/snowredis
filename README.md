@@ -18,7 +18,7 @@ A distributed ID generator utility using the Snowflake algorithm with Redis for 
 ## Installation
 
 ```bash
-go get snowredis
+go get github.com/sunquakes/snowredis
 ```
 
 ## Usage
@@ -195,10 +195,10 @@ The library is designed for high performance:
 
 ## Custom Redis Client Implementation
 
-The library uses an interface-based approach for Redis clients, allowing you to implement your own Redis client that conforms to the RedisClient interface:
+The library uses an interface-based approach for Redis clients, allowing you to implement your own Redis client that conforms to the Client interface:
 
 ```go
-type RedisClient interface {
+type Client interface {
 	SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) (bool, error)
 	Incr(ctx context.Context, key string) (int64, error)
 	Del(ctx context.Context, keys ...string) (int64, error)

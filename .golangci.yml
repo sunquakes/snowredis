@@ -7,8 +7,6 @@ linters-settings:
     simplify: true
   goimports:
     local-prefixes: github.com/sunquakes/snowredis
-  golint:
-    min-confidence: 0.8
   gocyclo:
     min-complexity: 15
   govet:
@@ -17,48 +15,19 @@ linters-settings:
     locale: US
 
 linters:
-  enable-all: true
-  disable:
-    - maligned
-    - prealloc
-    - gochecknoinits
-    - gochecknoglobals
-    - lll
-    - godox
-    - gocognit
-    - whitespace
-    - wsl
-    - funlen
-    - goerr113
-    - testpackage
-    - nlreturn
-    - gomnd
-    - exhaustivestruct
-    - paralleltest
-    - tparallel
-    - thelper
-    - ifshort
-    - exhaustruct
-    - varnamelen
-    - gci
-    - gocritic
-    - wrapcheck
-    - interfacer
-    - scopelint
-    - musttag
-    - ireturn
-    - forcetypeassert
-    - cyclop
-    - maintidx
-    - errchkjson
-    - goheader
-    - containedctx
-    - contextcheck
+  disable-all: true
+  enable:
+    - gofmt
+    - goimports
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - gosimple
+    - ineffassign
+    - typecheck
     - revive
-    - nosprintfhostport
-    - rowserrcheck
-    - sqlclosecheck
-    - wastedassign
+    - gocyclo
 
 issues:
   exclude-use-default: false

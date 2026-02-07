@@ -18,7 +18,7 @@ SnowRedis is a distributed ID generation system that combines the Twitter Snowfl
   - 12 bits: Sequence number
 
 #### 2. Redis Coordination Layer
-- **RedisClient Interface**: Abstracts Redis operations for pluggable implementations
+- **Client Interface**: Abstracts Redis operations for pluggable implementations
 - **ID Allocation**: Automatic allocation of datacenter and worker IDs via Redis
 - **Node Registration**: Ensures unique node identification across the cluster
 
@@ -124,7 +124,7 @@ sf, err := snowflake.NewRedisSnowflakeBuilder().
 ## Extensibility
 
 ### Custom Redis Clients
-The `RedisClient` interface allows plugging in different Redis implementations:
+The `Client` interface allows plugging in different Redis implementations:
 - Standard Redis
 - Clustered Redis
 - Custom caching layers

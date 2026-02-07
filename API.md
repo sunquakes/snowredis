@@ -67,7 +67,7 @@ id, err := redisSnowflake.GenerateUsingMutex()
 ## Core Components
 
 - `RedisSnowflake` - Main ID generator structure
-- `RedisClient` - Redis client interface
+- `Client` - Redis client interface
 - `NewSnowflake` - Instance using Redis to automatically assign datacenterID and workerID (deprecated, use NewSnowflakeWithClient)
 - `NewSnowflakeWithClient` - Instance using Redis to automatically assign datacenterID and workerID (provides Redis client)
 - `NewSnowflakeWithConfig` - Create instance with default Redis client (deprecated, use NewSnowflakeWithConfigAndClient)
@@ -98,6 +98,6 @@ id, err := redisSnowflake.GenerateUsingMutex()
 - `Del` - 删除键
 - `GetRedisInstance` - 获取全局Redis实例
 - `NewRedisClient` - 创建并返回Redis客户端实例
-- `SetNX` - 如果键不存在则设置（实现RedisClient接口）
-- `Incr` - 原子递增（实现RedisClient接口）
-- `Del` - 删除键（实现RedisClient接口）
+- `SetNX` - 如果键不存在则设置（实现Client接口）
+- `Incr` - 原子递增（实现Client接口）
+- `Del` - 删除键（实现Client接口）
