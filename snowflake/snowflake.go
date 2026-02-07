@@ -44,7 +44,6 @@ type RedisSnowflakeBuilder struct {
 }
 
 // NewBuilder Creates a new RedisSnowflakeBuilder instance
-// @return *RedisSnowflakeBuilder - the created builder instance
 func NewBuilder() *RedisSnowflakeBuilder {
 	return &RedisSnowflakeBuilder{}
 }
@@ -98,12 +97,10 @@ func (builder *RedisSnowflakeBuilder) Build() (*RedisSnowflake, error) {
 	return builder.createLocalInstance(datacenterID, workerID, nil)
 }
 
-/**
- * determineConfiguration determines the configuration based on priority of provided parameters
- * @return int64 - the datacenter ID to use
- * @return int64 - the worker ID to use
- * @return bool - flag indicating whether to use Redis allocation
- */
+// determineConfiguration determines the configuration based on priority of provided parameters
+// @return int64 - the datacenter ID to use
+// @return int64 - the worker ID to use
+// @return bool - flag indicating whether to use Redis allocation
 func (builder *RedisSnowflakeBuilder) determineConfiguration() (int64, int64, bool) {
 	// 1. If datacenterID and workerID (non-zero) are set, prioritize manual values
 	if builder.datacenterID != ZeroValue && builder.workerID != ZeroValue {
@@ -116,11 +113,9 @@ func (builder *RedisSnowflakeBuilder) determineConfiguration() (int64, int64, bo
 	return DefaultDatacenterID, DefaultWorkerID, NoAllocationFlag // Use default values
 }
 
-/**
- * generateLocally generates an ID locally without Redis coordination
- * @return int64 - the generated unique ID
- * @return error - any error that occurred during generation (e.g. clock rollback)
- */
+// generateLocally generates an ID locally without Redis coordination
+// @return int64 - the generated unique ID
+// @return error - any error that occurred during generation (e.g. clock rollback)
 func (rs *RedisSnowflake) generateLocally() (int64, error) {
 	rs.node.Lock()
 	defer rs.node.Unlock()
@@ -157,11 +152,9 @@ func (rs *RedisSnowflake) generateLocally() (int64, error) {
 	return id, nil
 }
 
-/**
- * generateWithRedisAssistance generates an ID using Redis assistance to ensure global uniqueness
- * @return int64 - the generated unique ID
- * @return error - any error that occurred during generation
- */
+// generateWithRedisAssistance generates an ID using Redis assistance to ensure global uniqueness
+// @return int64 - the generated unique ID
+// @return error - any error that occurred during generation
 func (rs *RedisSnowflake) generateWithRedisAssistance() (int64, error) {
 	// Try multiple times to generate an ID until we successfully obtain a unique one
 	maxRetries := 10
@@ -215,14 +208,12 @@ func (rs *RedisSnowflake) Cleanup() {
 	// Previous node registration functionality has been removed
 }
 
-/**
- * createInstance creates a RedisSnowflake instance with the given parameters
- * @param datacenterID - int64 representing the datacenter ID
- * @param workerID - int64 representing the worker ID
- * @param client - redis.Client interface implementation (can be nil for local-only mode)
- * @return *RedisSnowflake - the created instance
- * @return error - any error that occurred during creation
- */
+// createInstance creates a RedisSnowflake instance with the given parameters
+// @param datacenterID - int64 representing the datacenter ID
+// @param workerID - int64 representing the worker ID
+// @param client - redis.Client interface implementation (can be nil for local-only mode)
+// @return *RedisSnowflake - the created instance
+// @return error - any error that occurred during creation
 func (builder *RedisSnowflakeBuilder) createInstance(datacenterID, workerID int64, client redis.Client) (*RedisSnowflake, error) {
 	node, err := NewNode(datacenterID, workerID)
 	if err != nil {
@@ -238,36 +229,30 @@ func (builder *RedisSnowflakeBuilder) createInstance(datacenterID, workerID int6
 	}, nil
 }
 
-/**
- * createLocalInstance creates a local-only instance for ID generation (without Redis coordination)
- * @param datacenterID - int64 representing the datacenter ID
- * @param workerID - int64 representing the worker ID
- * @param client - redis.Client interface implementation (will be nil for local-only mode)
- * @return *RedisSnowflake - the created local instance
- * @return error - any error that occurred during creation
- */
+// createLocalInstance creates a local-only instance for ID generation (without Redis coordination)
+// @param datacenterID - int64 representing the datacenter ID
+// @param workerID - int64 representing the worker ID
+// @param client - redis.Client interface implementation (will be nil for local-only mode)
+// @return *RedisSnowflake - the created local instance
+// @return error - any error that occurred during creation
 func (builder *RedisSnowflakeBuilder) createLocalInstance(datacenterID, workerID int64, client redis.Client) (*RedisSnowflake, error) {
 	return builder.createInstance(datacenterID, workerID, client)
 }
 
-/**
- * createInstanceWithClient creates an instance with a Redis client and specified IDs
- * @param client - redis.Client interface implementation
- * @param datacenterID - int64 representing the datacenter ID
- * @param workerID - int64 representing the worker ID
- * @return *RedisSnowflake - the created instance with Redis client
- * @return error - any error that occurred during creation
- */
+// createInstanceWithClient creates an instance with a Redis client and specified IDs
+// @param client - redis.Client interface implementation
+// @param datacenterID - int64 representing the datacenter ID
+// @param workerID - int64 representing the worker ID
+// @return *RedisSnowflake - the created instance with Redis client
+// @return error - any error that occurred during creation
 func (builder *RedisSnowflakeBuilder) createInstanceWithClient(client redis.Client, datacenterID, workerID int64) (*RedisSnowflake, error) {
 	return builder.createInstance(datacenterID, workerID, client)
 }
 
-/**
- * createRedisAllocatedInstance creates an instance with IDs automatically allocated by Redis
- * @param client - redis.Client interface implementation
- * @return *RedisSnowflake - the created instance with Redis-allocated IDs
- * @return error - any error that occurred during creation or ID allocation
- */
+// createRedisAllocatedInstance creates an instance with IDs automatically allocated by Redis
+// @param client - redis.Client interface implementation
+// @return *RedisSnowflake - the created instance with Redis-allocated IDs
+// @return error - any error that occurred during creation or ID allocation
 func (builder *RedisSnowflakeBuilder) createRedisAllocatedInstance(client redis.Client) (*RedisSnowflake, error) {
 	ctx := context.Background()
 

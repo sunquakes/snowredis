@@ -73,10 +73,8 @@ func NewNode(datacenterID int64, workerID int64) (*Node, error) {
 	}, nil
 }
 
-/**
- * currentTimeMillis Gets current timestamp in milliseconds
- * @return int64 - current timestamp in milliseconds
- */
+// currentTimeMillis Gets current timestamp in milliseconds
+// @return int64 - current timestamp in milliseconds
 func currentTimeMillis() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
