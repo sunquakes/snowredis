@@ -24,7 +24,7 @@ func TestStrictModeWithRedis(t *testing.T) {
 	}
 	defer sf.Cleanup()
 
-	// 生成一些ID并验证
+	// Generate some IDs and validate them
 	ids := make([]int64, 10)
 	for i := 0; i < 10; i++ {
 		id, err := sf.Generate()
@@ -90,7 +90,7 @@ func TestNormalMode(t *testing.T) {
 	}
 	defer sf.Cleanup()
 
-	// 生成一些ID并验证
+	// Generate some IDs and validate them
 	ids := make([]int64, 10)
 	for i := 0; i < 10; i++ {
 		id, err := sf.Generate()
