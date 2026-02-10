@@ -40,19 +40,23 @@ jobs:
             exit 1
           fi
           
-          # Find the start of the next version section or end of file
+          # Find the start of the next version section
           NEXT_HEADER=$(tail -n +$((START_LINE + 1)) CHANGELOG.md | grep -n "^## \[" | head -n1 | cut -d: -f1)
+          
           if [ -n "$NEXT_HEADER" ]; then
-            END_LINE=$((START_LINE + NEXT_HEADER - 1))
+            # If there's a next version, extract up to that line (exclusive)
+            # Adjust calculation to correctly include content up to but not including the next version header
+            END_LINE=$((START_LINE + NEXT_HEADER - 2))
+            sed -n "$((START_LINE + 1)),$((END_LINE))p" CHANGELOG.md > release_notes.txt
           else
-            END_LINE=$(wc -l < CHANGELOG.md)
+            # If no next version, extract to the end of file
+            TOTAL_LINES=$(wc -l < CHANGELOG.md)
+            sed -n "$((START_LINE + 1)),$((TOTAL_LINES))p" CHANGELOG.md > release_notes.txt
           fi
           
-          # Extract the content for this specific version (excluding the version header)
-          sed -n "$((START_LINE + 1)),$END_LINE p" CHANGELOG.md > release_notes.txt
+          # Read the content for release notes, making sure all sections are included
+          RELEASE_NOTES=$(cat release_notes.txt)
           
-          # Trim whitespace and prepare the release notes
-          RELEASE_NOTES=$(cat release_notes.txt | sed '/^[[:space:]]*$/d')
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           echo "$RELEASE_NOTES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
